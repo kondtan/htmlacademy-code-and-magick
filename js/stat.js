@@ -20,27 +20,25 @@ var TEXT_HEADING_LINE_GAP = 20;
 var TEXT_HEADING_FIRST_LINE = 'Ура, вы победили!';
 var TEXT_HEADING_SECOND_LINE = 'Список результатов:';
 
+var getRandomInteger = function (min, max) {
+  var random = Math.random() * (max + 1) + min;
+  return Math.floor(random);
+};
+
 var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
   ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
 };
 
-var textHeadingX = CLOUD_X + HEADING_GAP_X;
-var textHeadingSecondLineY = TEXT_HEADING_Y + TEXT_HEADING_LINE_GAP;
-
-var renderText = function (ctx, x, y, text, font, color) {
-  ctx.fillStyle = color;
-  ctx.font = font;
+var renderText = function (ctx, x, y, text) {
+  ctx.fillStyle = TEXT_COLOR;
+  ctx.font = TEXT_FONT;
   ctx.fillText(text, x, y);
 };
 
 var renderBar = function (ctx, x, y, width, height, color) {
   ctx.fillStyle = color;
   ctx.fillRect(x, y, width, height);
-};
-
-var getRandomInteger = function () {
-  return Math.floor(Math.random() * 110);
 };
 
 var getMaxElement = function (arr) {
@@ -55,14 +53,14 @@ var getMaxElement = function (arr) {
   return maxElement;
 };
 
-var nameY = CLOUD_HEIGHT - TEXT_HEIGHT + CLOUD_Y;
-
 window.renderStatistics = function (ctx, players, times) {
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, SHADOW_COLOR);
   renderCloud(ctx, CLOUD_X, CLOUD_Y, CLOUD_COLOR);
 
-  renderText(ctx, textHeadingX, TEXT_HEADING_Y, TEXT_HEADING_FIRST_LINE, TEXT_FONT, TEXT_COLOR);
-  renderText(ctx, textHeadingX, textHeadingSecondLineY, TEXT_HEADING_SECOND_LINE, TEXT_FONT, TEXT_COLOR);
+  var textHeadingX = CLOUD_X + HEADING_GAP_X;
+  var textHeadingSecondLineY = TEXT_HEADING_Y + TEXT_HEADING_LINE_GAP;
+  renderText(ctx, textHeadingX, TEXT_HEADING_Y, TEXT_HEADING_FIRST_LINE);
+  renderText(ctx, textHeadingX, textHeadingSecondLineY, TEXT_HEADING_SECOND_LINE);
 
   var maxTime = getMaxElement(times);
 
@@ -70,9 +68,10 @@ window.renderStatistics = function (ctx, players, times) {
     var playerX = CLOUD_X + BAR_MARGIN + (BAR_MARGIN + BAR_WIDTH) * i;
     var barHeight = (BAR_HEIGHT * times[i]) / maxTime;
     var barY = BAR_HEIGHT - barHeight + CLOUD_Y + TEXT_HEIGHT + TEXT_HEADING_Y + TEXT_HEADING_LINE_GAP * 2;
-    var barColor = (players[i] === 'Вы') ? BAR_COLOR_YOU : 'hsl(240, ' + getRandomInteger() + '%, 30%)';
-    var playerTime = Math.trunc(times[i]);
+    var barColor = (players[i] === 'Вы') ? BAR_COLOR_YOU : 'hsl(240, ' + getRandomInteger(10, 100) + '%, 30%)';
+    var playerTime = Math.floor(times[i]);
     var playerTimeY = barY - TEXT_HEIGHT;
+    var nameY = CLOUD_HEIGHT - TEXT_HEIGHT + CLOUD_Y;
 
     renderText(ctx, playerX, playerTimeY, playerTime, TEXT_FONT, TEXT_COLOR);
     renderText(ctx, playerX, nameY, players[i], TEXT_FONT, TEXT_COLOR);
