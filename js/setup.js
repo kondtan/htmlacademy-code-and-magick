@@ -1,49 +1,55 @@
 'use strict';
 
+var WIZARDS_AMOUNT = 4;
+var NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
+var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
+var COAT_COLOR_ARRAY = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
+var EYES_COLOR_ARRAY = ['black', 'red', 'blue', 'yellow', 'green'];
 var userDialog = document.querySelector('.setup');
 var similarListElement = document.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
   .content
   .querySelector('.setup-similar-item');
-var wizardList = document.createDocumentFragment();
-var wizardNames = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-var wizardSurnames = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-
-var coatColorArray = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-var eyesColorArray = ['black', 'red', 'blue', 'yellow', 'green'];
-
-var wizardArray = [];
-
-var getRandomInteger = function (min, max) {
-  var random = Math.random() * (max + 1) + min;
-  return Math.floor(random);
-};
 
 document.querySelector('.setup-similar').classList.remove('hidden');
 userDialog.classList.remove('hidden');
 
-for (var i = 0; i < 4; i++) {
-  var wizardElement = similarWizardTemplate.cloneNode(true);
-
-  var randomName = wizardNames[getRandomInteger(0, wizardNames.length - 1)];
-  var randomSurname = wizardSurnames[getRandomInteger(0, wizardSurnames.length - 1)];
-  var fullName = randomName + ' ' + randomSurname;
-
-  var randomEyesColor = eyesColorArray[getRandomInteger(0, eyesColorArray.length - 1)];
-
-  var randomCoatColor = coatColorArray[getRandomInteger(0, coatColorArray.length - 1)];
-
-  wizardArray[i] = {
-    name: fullName,
-    coatColor: randomCoatColor,
-    eyesColor: randomEyesColor
+// генерируем случайные данные в виде объекта wizard
+var randomWizard = function () {
+  // генерируем случайное число
+  var getRandomInteger = function (array) {
+    return array[Math.floor(Math.random() * array.length)];
   };
 
-  wizardElement.querySelector('.setup-similar-label').textContent = wizardArray[i].name;
-  wizardElement.querySelector('.wizard-coat').style.fill = wizardArray[i].coatColor;
-  wizardElement.querySelector('.wizard-eyes').style.fill = wizardArray[i].eyesColor;
+  var wizard = {};
 
-  wizardList.appendChild(wizardElement);
-}
+  wizard.name = getRandomInteger(NAMES) + ' ' + getRandomInteger(SURNAMES);
+  wizard.coatColor = getRandomInteger(EYES_COLOR_ARRAY);
+  wizard.eyesColor = getRandomInteger(COAT_COLOR_ARRAY);
 
-similarListElement.appendChild(wizardList);
+  return wizard;
+};
+
+// создаем DOM-элемент на основе JS-объекта
+var renderWizard = function (wizard) {
+  var wizardElement = similarWizardTemplate.cloneNode(true);
+
+  wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
+  wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
+  wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
+
+  return wizardElement;
+};
+
+// создаем фрагмент и заполняем блок DOM-элементами
+var insertWizards = function () {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < WIZARDS_AMOUNT; i++) {
+    fragment.appendChild(renderWizard(randomWizard()));
+  }
+
+  return fragment;
+};
+
+similarListElement.appendChild(insertWizards());
