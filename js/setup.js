@@ -5,14 +5,25 @@ var NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Крис�
 var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var COATS_COLORS_ARRAY = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS_ARRAY = ['black', 'red', 'blue', 'yellow', 'green'];
-var userDialog = document.querySelector('.setup');
+var FIREBALL_COLORS_ARRAY = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+var ESC_KEY = 'Escape';
+var ENTER_KEY = 'Enter';
 var similarListElement = document.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
   .content
   .querySelector('.setup-similar-item');
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = document.querySelector('.setup-close');
+var wizardCoat = document.querySelector('.setup-wizard .wizard-coat');
+var wizardEyes = document.querySelector('.setup-wizard .wizard-eyes');
+var wizardFireball = document.querySelector('.setup-fireball-wrap');
+var setupWizardAppearance = document.querySelector('.setup-wizard-appearance');
+var wizardCoatClickCounter = 0;
+var wizardEyesClickCounter = 0;
+var wizardFireballClickCounter = 0;
 
 document.querySelector('.setup-similar').classList.remove('hidden');
-userDialog.classList.remove('hidden');
 
 // генерируем случайное число
 var getRandomInteger = function (array) {
@@ -53,3 +64,91 @@ var insertWizards = function () {
 };
 
 similarListElement.appendChild(insertWizards());
+
+// создаем магическую кнопку
+var onPopupEscPress = function (evt) {
+  if (evt.key === ESC_KEY) {
+    closePopup();
+  }
+};
+
+// создаем функцию, отрывающую окно настроек
+var openPopup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+// создаем функцию, закрывающую окно настроек
+var closePopup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+// открываем окно настроек по клику на аватарку
+setupOpen.addEventListener('click', function () {
+  openPopup();
+});
+
+// открываем окно настроек по нажатию на Enter
+setupOpen.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    openPopup();
+  }
+});
+
+// закрываем окно настроек по клику на крестик
+setupClose.addEventListener('click', function () {
+  closePopup();
+});
+
+// закрываем окно настроек по нажатию на Enter
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    closePopup();
+  }
+});
+
+var onCoatClick = function () {
+  if (wizardCoatClickCounter === COATS_COLORS_ARRAY.length - 1) {
+    wizardCoatClickCounter = 0;
+  } else {
+    wizardCoatClickCounter++;
+  }
+  var randomColor = COATS_COLORS_ARRAY[wizardCoatClickCounter];
+  wizardCoat.style.fill = randomColor;
+  setupWizardAppearance.querySelector('input[name="coat-color"]').value = randomColor;
+};
+
+wizardCoat.addEventListener('click', function () {
+  onCoatClick();
+});
+
+var onEyesClick = function () {
+  if (wizardEyesClickCounter === EYES_COLORS_ARRAY.length - 1) {
+    wizardEyesClickCounter = 0;
+  } else {
+    wizardEyesClickCounter++;
+  }
+  var randomColor = EYES_COLORS_ARRAY[wizardEyesClickCounter];
+  wizardEyes.style.fill = randomColor;
+  setupWizardAppearance.querySelector('input[name="eyes-color"]').value = randomColor;
+};
+
+wizardEyes.addEventListener('click', function () {
+  onEyesClick();
+});
+
+var onFireballClick = function () {
+  if (wizardFireballClickCounter === FIREBALL_COLORS_ARRAY.length - 1) {
+    wizardFireballClickCounter = 0;
+  } else {
+    wizardFireballClickCounter++;
+  }
+  var randomColor = FIREBALL_COLORS_ARRAY[wizardFireballClickCounter];
+  wizardFireball.style.background = randomColor;
+  wizardFireball.querySelector('input').value = randomColor;
+};
+
+wizardFireball.addEventListener('click', function () {
+  onFireballClick();
+});
