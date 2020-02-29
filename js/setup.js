@@ -6,8 +6,8 @@ var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Валь
 var COATS_COLORS_ARRAY = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS_ARRAY = ['black', 'red', 'blue', 'yellow', 'green'];
 var FIREBALL_COLORS_ARRAY = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
-var ESC_KEY = '27';
-var ENTER_KEY = '13';
+var ESC_KEY = 27;
+var ENTER_KEY = 13;
 var similarListElement = document.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
   .content
@@ -69,7 +69,7 @@ similarListElement.appendChild(insertWizards());
 
 // создаем магическую кнопку
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode == ESC_KEY) {
+  if (evt.keyCode === ESC_KEY) {
     closePopup();
   }
 };
