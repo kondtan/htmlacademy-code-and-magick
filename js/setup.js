@@ -6,8 +6,8 @@ var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Валь
 var COATS_COLORS_ARRAY = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS_ARRAY = ['black', 'red', 'blue', 'yellow', 'green'];
 var FIREBALL_COLORS_ARRAY = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
-var ESC_KEY = 'Escape';
-var ENTER_KEY = 'Enter';
+var ESC_KEY = '27';
+var ENTER_KEY = '13';
 var similarListElement = document.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
   .content
@@ -18,7 +18,9 @@ var setupClose = document.querySelector('.setup-close');
 var wizardCoat = document.querySelector('.setup-wizard .wizard-coat');
 var wizardEyes = document.querySelector('.setup-wizard .wizard-eyes');
 var wizardFireball = document.querySelector('.setup-fireball-wrap');
-var setupWizardAppearance = document.querySelector('.setup-wizard-appearance');
+var setupWizardEyes = document.querySelector('.setup-wizard-appearance input[name="eyes-color"]');
+var setupWizardCoat = document.querySelector('.setup-wizard-appearance input[name="coat-color"]');
+
 var wizardCoatClickCounter = 0;
 var wizardEyesClickCounter = 0;
 var wizardFireballClickCounter = 0;
@@ -67,7 +69,7 @@ similarListElement.appendChild(insertWizards());
 
 // создаем магическую кнопку
 var onPopupEscPress = function (evt) {
-  if (evt.key === ESC_KEY) {
+  if (evt.keyCode == ESC_KEY) {
     closePopup();
   }
 };
@@ -80,18 +82,20 @@ var openPopup = function () {
 
 // создаем функцию, закрывающую окно настроек
 var closePopup = function () {
-  setup.classList.add('hidden');
-  document.removeEventListener('keydown', onPopupEscPress);
+  if (!document.activeElement.classList.contains('setup-user-name')) {
+    setup.classList.add('hidden');
+    document.removeEventListener('keydown', onPopupEscPress);
+  }
 };
 
+setupClose.addEventListener('click', closePopup);
+
 // открываем окно настроек по клику на аватарку
-setupOpen.addEventListener('click', function () {
-  openPopup();
-});
+setupOpen.addEventListener('click', openPopup);
 
 // открываем окно настроек по нажатию на Enter
 setupOpen.addEventListener('keydown', function (evt) {
-  if (evt.key === ENTER_KEY) {
+  if (evt.keyCode === ENTER_KEY) {
     openPopup();
   }
 });
@@ -103,7 +107,7 @@ setupClose.addEventListener('click', function () {
 
 // закрываем окно настроек по нажатию на Enter
 setupClose.addEventListener('keydown', function (evt) {
-  if (evt.key === ENTER_KEY) {
+  if (evt.keyCode === ENTER_KEY) {
     closePopup();
   }
 });
@@ -116,12 +120,10 @@ var onCoatClick = function () {
   }
   var randomColor = COATS_COLORS_ARRAY[wizardCoatClickCounter];
   wizardCoat.style.fill = randomColor;
-  setupWizardAppearance.querySelector('input[name="coat-color"]').value = randomColor;
+  setupWizardCoat.value = randomColor;
 };
 
-wizardCoat.addEventListener('click', function () {
-  onCoatClick();
-});
+wizardCoat.addEventListener('click', onCoatClick);
 
 var onEyesClick = function () {
   if (wizardEyesClickCounter === EYES_COLORS_ARRAY.length - 1) {
@@ -131,12 +133,10 @@ var onEyesClick = function () {
   }
   var randomColor = EYES_COLORS_ARRAY[wizardEyesClickCounter];
   wizardEyes.style.fill = randomColor;
-  setupWizardAppearance.querySelector('input[name="eyes-color"]').value = randomColor;
+  setupWizardEyes.value = randomColor;
 };
 
-wizardEyes.addEventListener('click', function () {
-  onEyesClick();
-});
+wizardEyes.addEventListener('click', onEyesClick);
 
 var onFireballClick = function () {
   if (wizardFireballClickCounter === FIREBALL_COLORS_ARRAY.length - 1) {
@@ -149,6 +149,4 @@ var onFireballClick = function () {
   wizardFireball.querySelector('input').value = randomColor;
 };
 
-wizardFireball.addEventListener('click', function () {
-  onFireballClick();
-});
+wizardFireball.addEventListener('click', onFireballClick);
